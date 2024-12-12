@@ -2,34 +2,58 @@ extends ../layout/index
 
 block contenido
     div.py-10
-        h1.text-4xl.my-10.font-extrabold.text-center Bienes 
-            span.font-normal Raíces  
+        h1.text-4xl.my-10.font-extrabold.text-center.text-green Bienes
+            span.font-normal.text-orange Raíces  
         h2.text-center.text-2xl.font-extrabold= pagina
 
-        if errores 
-            div(class="max-w-md mx-auto my-10")
-                each error in errores
-                    p.bg-red-600.text-white.uppercase.text-xs.text-center.p-2.mb-1.font-bold= error.msg
+        if errores
+                div(class="max-w-md mx-auto my-10")
+                    each error, index in errores
+                        div(id="error-#{index}" class="flex items-center p-4 mb-4 text-sm text-reds border border-reds rounded-lg bg-red1 dark:text-reds dark:border-reds alert" role="alert")
+                            svg(class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20")
+                                path(d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z")
+                            span(class="sr-only") Info
+                            div
+                                span(class="font-medium") 
+                                | #{error.msg}
+                style.
+                    .alert {
+                        animation: hideAlert 5s forwards;
+                    }
+
+                    @keyframes hideAlert {
+                        0% {
+                            opacity: 1;
+                        }
+                        99% {
+                            opacity: 1;
+                        }
+                        100% {
+                            opacity: 0;
+                            visibility: hidden;
+                            display: none;
+                        }
+                    }
 
         .mt-8.mx-auto.max-w-md 
-            .bg-white.py-8.px-4.shadow
+            .bg-white.py-8.px-4.shadow-md.rounded-md
                 form.space-y-5(method="POST" action="/auth/registro" novalidate)
                     input(type="hidden" name="_csrf" value= csrfToken) 
                     div 
-                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="nombre") Tu Nombre
-                        input#nombre.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Escribe tu nombre" type="text" name="nombre" value= usuario ? usuario.nombre : '')
+                        label.block.text-sm.uppercase.text-gray.mb-3.font-bold(for="nombre") Tu Nombre
+                        input#nombre.w-full.px-3.py-2.border.border-gray.rounded-md.placeholder-gray(placeholder="Escribe tu nombre" type="text" name="nombre" value= usuario ? usuario.nombre : '')
                     div 
-                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="email") Email de Registro
-                        input#email.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Escribe tu email" type="email" name="email" value= usuario ? usuario.email : '' ) 
+                        label.block.text-sm.uppercase.text-gray.mb-3.font-bold(for="email") Email de Registro
+                        input#email.w-full.px-3.py-2.border.border-gray.rounded-md.placeholder-gray(placeholder="Escribe tu email" type="email" name="email" value= usuario ? usuario.email : '' ) 
                     div 
-                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="password") Password
-                        input#password.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Escribe tu password" type="password" name="password" )        
+                        label.block.text-sm.uppercase.text-gray.mb-3.font-bold(for="password") Password
+                        input#password.w-full.px-3.py-2.border.border-gray.rounded-md.placeholder-gray(placeholder="Escribe tu password" type="password" name="password" )        
                     div 
-                        label.block.text-sm.uppercase.text-gray-500.mb-3.font-bold(for="repetir_password") Repetir password
-                        input#repetir_password.w-full.px-3.py-2.border.border-gray-300.rounded-md.placeholder-gray-400(placeholder="Repite tu password" type="password" name="repetir_password")         
+                        label.block.text-sm.uppercase.text-gray.mb-3.font-bold(for="repetir_password") Repetir password
+                        input#repetir_password.w-full.px-3.py-2.border.border-gray.rounded-md.placeholder-gray(placeholder="Repite tu password" type="password" name="repetir_password")         
                     
                     div.flex.items-center.justify-between 
-                        a.text-gray-500.text-xs(href="/auth/login") ¿Ya tienes cuenta? Inicia Sesión
-                        a.text-gray-500.text-xs(href="/auth/olvide-password") Olvide mi Password 
+                        a.text-gray.text-xs(href="/auth/login" class="hover:underline hover:decoration-2 hover:decoration-orange") ¿Ya tienes cuenta? Inicia Sesión
+                        a.text-gray.text-xs(href="/auth/olvide-password" class="hover:underline hover:decoration-2 hover:decoration-orange") Olvide mi Password 
 
-                    input(class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 cursor-pointer" type="submit" value="Crear cuenta")    
+                    input(class="w-full bg-green hover:bg-orange text-white font-bold py-3 cursor-pointer rounded-md" type="submit" value="Crear cuenta")    
