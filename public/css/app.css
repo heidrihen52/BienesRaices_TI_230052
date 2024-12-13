@@ -574,9 +574,6 @@ video {
 .mt-8 {
   margin-top: 2rem;
 }
-.ml-3 {
-  margin-left: 0.75rem;
-}
 .block {
   display: block;
 }
@@ -616,9 +613,6 @@ video {
 .h-auto {
   height: auto;
 }
-.h-10 {
-  height: 2.5rem;
-}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -633,9 +627,6 @@ video {
 }
 .w-full {
   width: 100%;
-}
-.w-10 {
-  width: 2.5rem;
 }
 .max-w-4xl {
   max-width: 56rem;
@@ -715,9 +706,6 @@ video {
 }
 .rounded-md {
   border-radius: 0.375rem;
-}
-.rounded-full {
-  border-radius: 9999px;
 }
 .border {
   border-width: 1px;
