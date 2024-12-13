@@ -23,6 +23,14 @@ const Usuario = db.define('usuarios', {
     foto: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    alias: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    fechaDeNacimiento: {
+        type: DataTypes.DATEONLY,
+        allowNull: true
     }
 }, {
     hooks: {

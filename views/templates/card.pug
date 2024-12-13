@@ -1,11 +1,18 @@
-div(class="bg-white shadow-md rounded-lg")
-    img(class="object-cover h-72 w-full"  src=`/uploads/${propiedad.imagen}` alt=`imagen de la propiedad ${propiedad.titulo}`)
+div(class="bg-white shadow rounded-lg")
+    img(class="object-cover h-72 w-full" src=`/uploads/${propiedad.imagen}` alt=`imagen de la propiedad ${propiedad.titulo}`)
     div(class="p-5 space-y-5")
         h1(class="text-xl font-bold")= propiedad.titulo
         p(class="text-sm text-gray") Habitaciones:  
-                                span(class="text-gray font-bold")= propiedad.habitaciones
+            span(class="text-gray font-bold")= propiedad.habitaciones
         p(class="text-sm text-gray") WC:  
-                                span(class="text-gray font-bold")= propiedad.wc
+            span(class="text-gray font-bold")= propiedad.wc
         p(class="text-sm text-gray") Precio:  
-                                span(class="text-gray font-bold")= propiedad.precio.nombre 
-        a(href=`/propiedad/${propiedad.id}` class="bg-green w-full text-center block font-bold text-white p-2 uppercase rounded") Ver Propiedad          
+            span(class="text-gray font-bold")= propiedad.precio.nombre
+        div(class="flex items-center space-x-3")
+            img(class="w-10 h-10 rounded-full" src=`/uploads/${vendedor.foto}` alt=`Foto de ${vendedor.alias}`)
+            span(class="text-sm font-bold text-gray")= vendedor.alias
+        a(href=`/propiedad/${propiedad.id}` class="bg-pigmentgreen w-full text-center block font-bold text-white p-2 uppercase rounded flex items-center justify-between space-x-3")
+            div(class="flex items-center space-x-3")
+                img(class="w-8 h-8 rounded-full" src=`/uploads/${vendedor.foto}` alt=`Foto de ${vendedor.alias}`)
+                span(class="text-sm font-bold text-white")= vendedor.alias
+            span Ver Propiedad        
