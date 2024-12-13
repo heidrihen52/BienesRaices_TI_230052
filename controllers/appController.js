@@ -3,7 +3,7 @@ import { Sequelize } from 'sequelize'
 
 const inicio = async (req, res) => {
 
-    const [categorias, precios, casas, departamentos] = await Promise.all([
+    const [categorias, precios, casas, departamentos, estableciminetosRenta, establecimientosVenta] = await Promise.all([
         Categoria.findAll({ raw: true }),
         Precio.findAll({ raw: true }),
         Propiedad.findAll({
@@ -35,8 +35,40 @@ const inicio = async (req, res) => {
             order: [
                 ['createdAt', 'DESC']
             ]
+        }),
+        Propiedad.findAll({
+            limit: 3,
+            where: {
+                categoriaID: 3, // Establecimientos
+                operacion: 'renta' // Solo para renta
+            },
+            include: [
+                {
+                    model: Precio,
+                    as: 'precio'
+                }
+            ],
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }),
+        Propiedad.findAll({
+            limit: 3,
+            where: {
+                categoriaID: 3, 
+                operacion: 'venta' 
+            },
+            include: [
+                {
+                    model: Precio,
+                    as: 'precio'
+                }
+            ],
+            order: [
+                ['createdAt', 'DESC']
+            ]
         })
-    ])
+    ]);
 
     res.render('inicio', {
         pagina: 'Inicio',
@@ -44,6 +76,8 @@ const inicio = async (req, res) => {
         precios,
         casas,
         departamentos,
+        propiedadesRenta: estableciminetosRenta,  
+        propiedadesVenta: establecimientosVenta,
         csrfToken: req.csrfToken()
     })
 }
@@ -62,18 +96,34 @@ const categoria = async (req, res) => {
 
     //obtener propiedades de la categoria
 
-    const propiedades = await Propiedad.findAll({
+    const propiedadesRenta = await Propiedad.findAll({
         where: {
-            categoriaID: id
+            categoriaID: id,
+            operacion: 'renta'
         },
         include: [
-            {model: Precio, as: 'precio'}
+            { model: Precio, as: 'precio' },
+            { model: Categoria, as: 'categoria' }   
+        ]
+    });
+
+    const propiedadesVenta = await Propiedad.findAll({
+        where: {
+            
+            categoriaID: id,
+            operacion: 'venta'
+        },
+        include: [
+            { model: Precio, as: 'precio' },
+            { model: Categoria, as: 'categoria' }   
         ]
     })
+    
 
     res.render('categoria',{
-        pagina: `${categoria.nombre}s en venta`,
-        propiedades,
+        pagina: `${categoria.nombre}s en venta o renta`,
+        propiedadesRenta,
+        propiedadesVenta,
         csrfToken: req.csrfToken()
     })
 }

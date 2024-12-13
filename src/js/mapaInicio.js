@@ -10,11 +10,13 @@
 
     const filtros = {
         categoria: '',
-        precio: ''
+        precio: '',
+        operacion:''
     }
 
     const categoriasSelect = document.querySelector('#categorias');
     const preciosSelect = document.querySelector('#precios');
+    const operacionSelect = document.querySelector('#operacion')
 
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -33,6 +35,11 @@
         filtrarPropiedades();
     })
 
+    operacionSelect.addEventListener('change', e => {
+        filtros.operacion = e.target.value; // Actualiza el filtro de operación
+        filtrarPropiedades();
+    });
+
 
     const obtenerPropiedades = async () => {
         try {
@@ -43,7 +50,7 @@
             mostrarPropiedades(propiedades)
 
         } catch (error) {
-            console.log(error)
+            console.error('Error al obtener propiedades:', error);
         }
     }
 
@@ -56,16 +63,16 @@
         propiedades.forEach(propiedad => {
             //Agregar los pines
 
-            const marker = new L.marker([propiedad?.lat, propiedad?.lng], {
+            const marker = new L.marker([propiedad.lat, propiedad.lng], {
                 autoPan: true
             })
                 .addTo(mapa)
                 .bindPopup(`
-            <p class="text-indigo-600 font-bold">${propiedad.categoria.nombre}</p>
-            <h1 class="text-xl font-extrabold uppercase my-5"> ${propiedad.titulo} </h1>
-            <img src="/uploads/${propiedad?.imagen}" alt="Imagen de la propiedad ${propiedad.titulo}">
-            <p class="text-gray-600 font-bold">${propiedad.precio.nombre}</p>
-            <a href="/propiedad/${propiedad.id}" class="bg-indigo-600 block p-2 text-center font-bold uppercase">Ver Propiedad</a>
+            <p class="text-green font-bold">${propiedad.categoria.nombre}</p>
+            <h1 class="text-xl font-extrabold uppercase my-5"> ${propiedad.titulo}</h1>
+            <img src="/uploads/${propiedad.imagen}" alt="Imagen de la propiedad ${propiedad.titulo}">
+            <p class="text-gray font-bold">${propiedad.precio.nombre}</p>
+            <a href="/propiedad/${propiedad.id}" class="bg-green block p-2 text-center font-bold uppercase">Ver Propiedad</a>
             `)
 
             markers.addLayer(marker)
@@ -73,17 +80,24 @@
     }
 
     const filtrarPropiedades = () => {
-        const resultado = propiedades.filter(filtrarCategoria).filter(filtrarPrecio)
-        mostrarPropiedades(resultado)
+        const resultado = propiedades
+            .filter(filtrarCategoria)
+            .filter(filtrarPrecio)
+            .filter(filtrarOperacion);  // Añadido el filtro de operación
+
+        mostrarPropiedades(resultado);
     }
 
     const filtrarCategoria = (propiedad) => {
-        return filtros.categoria ? propiedad.categoriaID === filtros.categoria : propiedad
+        return filtros.categoria ? propiedad.categoriaID === filtros.categoria : true
     }
 
     const filtrarPrecio = (propiedad) => {
-        return filtros.precio ? propiedad.precioID === filtros.precio : propiedad
+        return filtros.precio ? propiedad.precioID === filtros.precio : true
     }
+    const filtrarOperacion = (propiedad) => {
+        return filtros.operacion ? propiedad.operacion === filtros.operacion : true;
+    };
     obtenerPropiedades()
 
 })()

@@ -4,10 +4,19 @@ block contenido
     section(class="py-5")
         h2(class="text-center text-4xl font-extrabold pt-10")= pagina 
 
-        if propiedades.length
+        if propiedadesVneta.length
+            h3(class="text-2xl font-bold text-center mt-8 text-green") Propiedades en Venta
             div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
-                each propiedad in propiedades
+                each propiedad in propiedadesVenta
                     include ./templates/card
 
         else 
-            p(class="text-center text-gray text-sm py-10") No Hay Resultados
+            p(class="text-center text-gray text-sm py-10") No Hay Propiedades en Venta
+        
+        if propiedadesRenta.length
+            h3(class="text-2xl font-bold text-center mt-8 text-green") Propiedades en Renta
+            div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-5")
+                each propiedad in propiedadesRenta
+                    include ./templates/card
+        else
+            p(class="text-center text-gray text-lg py-10") No hay propiedades en renta para esta categoría.

@@ -98,7 +98,7 @@ const guardar = async (req, res) => {
     }
 
     //Crear registro
-    const { titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioID, categoria: categoriaID } = req.body
+    const { titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioID, categoria: categoriaID, operacion } = req.body
 
     const { id: usuarioID } = req.usuario
     try {
@@ -113,16 +113,18 @@ const guardar = async (req, res) => {
             lng,
             precioID,
             categoriaID,
+            operacion,
             usuarioID,
             imagen: ''
         })
 
-        const { id } = propiedadGuardada
+        
 
-        res.redirect(`/propiedades/agregar-imagen/${id}`)
+        res.redirect(`/propiedades/agregar-imagen/${propiedadGuardada.id}`)
 
     } catch (error) {
         console.log(error)
+        res.redirect('/mis-propiedades')
     }
 
 }
@@ -239,7 +241,7 @@ const guardarCambios = async (req, res) => {
         ])
 
         return res.render('propiedades/editar', {
-            pagina: 'Crear Propiedad',
+            pagina: 'Editar Propiedad',
             csrfToken: req.csrfToken(),
             categorias,
             precios,
@@ -248,25 +250,18 @@ const guardarCambios = async (req, res) => {
         })
     }
 
-    const { id } = req.params
+    
 
     //validar que la propiedad exista
+    const { id } = req.params
+    const { titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioID, categoria: categoriaID, operacion } = req.body;
     const propiedad = await Propiedad.findByPk(id)
 
-    if (!propiedad) {
-        return res.redirect('/mis-propiedades')
+    if (!propiedad || propiedad.usuarioID !== req.usuario.id) {
+        return res.redirect('/mis-propiedades');
     }
-
-    //Revisar quin visita la URL sea dueño de la propeidd
-    if (propiedad.usuarioID.toString() !== req.usuario.id.toString()) {
-        return res.redirect('/mis-propiedades')
-    }
-
-    //Rescribir el objeto y actualizar la bd
 
     try {
-        const { titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioID, categoria: categoriaID } = req.body
-
         propiedad.set({
             titulo,
             descripcion,
@@ -277,15 +272,14 @@ const guardarCambios = async (req, res) => {
             lat,
             lng,
             precioID,
-            categoriaID
-        })
+            categoriaID,
+            operacion
+        });
 
         await propiedad.save();
-
-        res.redirect('/mis-propiedades')
-
+        res.redirect('/mis-propiedades');
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 
 }

@@ -1,4 +1,4 @@
-extends ../layout/app
+extends ../layout/admin
 
 block styles
     link(rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css")
@@ -8,8 +8,8 @@ block contenido
         h1(id="titulo" class="text-4xl my-10 font-extrabold text-center")= propiedad.titulo
 
         div
-            a(href="#" class="font-bold text-gray text-sm") Categoria: 
-                span(class="font-normal")= propiedad.categoria.nombre 
+            a(href="#" class="font-bold text-gray-400 text-sm") Categoria: 
+                span(class="font-bold text-xl text-black")= propiedad.categoria.nombre 
 
         div(class="mt-5 md:flex md:gap-4 md:items-start")
             div(class="md:w-2/3 bg-white shadow rounded-lg") 
@@ -17,7 +17,7 @@ block contenido
 
                 div(class="px-5 py-10 space-y-5")
                     p= propiedad.descripcion
-                    h2(class="text-2xl leading-6 font-bold text-gray ") Informacion propiedad
+                    h2(class="text-2xl leading-6 font-bold text-gray-900 ") Informacion propiedad
 
                     div(class="grid grid-cols-1 md:grid-cols-2")
                         p(class="text-gray font-bold text-xs") WC
@@ -31,6 +31,8 @@ block contenido
                         
                         p(class="text-gray font-bold text-xs") Precio
                             span(class="text-gray block text-lg")= propiedad.precio.nombre
+                        p(class="text-gray font-bold text-xs") Operacion 
+                            span(class="text-gray font-bold text-lg")= propiedad.operacion
            
            
             aside(class="md:w-1/3 bg-white shadow rounded-lg")
@@ -91,14 +93,14 @@ block contenido
                                 div(class="space-y-5")
                                     label(for="mensaje") Mensaje 
                                     
-                                    textarea(id="mensaje", name="mensaje" ,class="w-full px-2 py-2 border border-gray rounded-lg shadow-md placeholder-gray" ,placeholder="Coloca tu mensaje aqui")  
+                                    textarea(id="mensaje", name="mensaje" ,class="w-full px-2 py-2 border border-gray rounded-lg shadow placeholder-gray-400" ,placeholder="Coloca tu mensaje aqui")  
 
-                                    input(type="submit" value="Enviar Mensaje" class="bg-green text-white font-bold uppercase text-sm w-full p-2 cursor-pointer")
+                                    input(type="submit" value="Enviar Mensaje" class="bg-green text-white font-bold rounded-lg uppercase text-sm w-full p-2 cursor-pointer")
 
                         else 
                             div(class="flex flex-col items-center justify-center gap-2")
                                 p(class="text-center") Si deseas contactar al vendedor 
-                                a(class="text-indigo" href="/auth/crear-cuenta")
+                                a(class="text-orange" href="/auth/crear-cuenta")
 
 
 block scripts 
