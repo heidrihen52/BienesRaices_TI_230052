@@ -6,6 +6,7 @@ const identificarUsuario = async (req, res, next) => {
     //identificar si hay un token
     const {_token} = req.cookies
     if (!_token) {
+        console.log("No token found, setting req.usuario to null");
         req.usuario = null
         return next()
     }
@@ -13,19 +14,24 @@ const identificarUsuario = async (req, res, next) => {
     //comprobar el token
 
     try {
-        const decoded = Jwt.verify(_token, process.env.JWT_SECRET)
-        const usuario = await Usuario.scope('eliminarPassword').findByPk(decoded.id)
+        const decoded = Jwt.verify(_token, process.env.JWT_SECRET);
+        console.log("Token decodificado:", decoded);
+
+        const usuario = await Usuario.scope('eliminarPassword').findByPk(decoded.id);
+        console.log("Usuario encontrado:", usuario);
 
         //Almacenar el usuario al req
         if (usuario) {
             req.usuario = usuario
-        } 
+        }else{
+            req.usuario = null;
+        }
 
         return next();
 
     } catch (error) {
-        console.log(error)
-        return res.clearCookie('_token').redirect('auth/login')
+        console.log("Error al verificar token:", error);
+        return res.clearCookie('_token').redirect('/auth/login');
     }
 }
 

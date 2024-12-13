@@ -75,7 +75,7 @@ block contenido
                             label.block.text-sm.uppercase.text-gray.mb-3.font-bold(for="habitaciones") Habitaciones
                             select#habitaciones.w-full.px-3.py-2.border.border-gray.rounded-md.placeholder-gray(name="habitaciones")     
                                 option(value="") - Seleccione -
-                                - var n = 1;
+                                - var n = 0;
                                 while n < 10
                                     option(value=n selected= datos.habitaciones ? datos.habitaciones == n ? true : false : null) #{n++}
             
@@ -83,14 +83,14 @@ block contenido
                             label.block.text-sm.uppercase.text-gray.mb-3.font-bold(for="estacionamiento") Estacionamiento
                             select#estacionamiento.w-full.px-3.py-2.border.border-gray.rounded-md.placeholder-gray(name="estacionamiento")     
                                 option(value="") - Seleccione -
-                                - var n = 1;
+                                - var n = 0;
                                 while n < 5
                                     option(value=n selected= datos.estacionamiento ? datos.estacionamiento == n ? true : false : null) #{n++}
                         div(class="md:w-1/3") 
                             label.block.text-sm.uppercase.text-gray.mb-3.font-bold(for="wc") WC
                             select#wc.w-full.px-3.py-2.border.border-gray.rounded-md.placeholder-gray(name="wc")     
                                 option(value="") - Seleccione -
-                                - var n = 1;
+                                - var n = 0;
                                 while n < 5
                                     option(value=n selected= datos.wc ? datos.wc == n ? true : false : null) #{n++}
 

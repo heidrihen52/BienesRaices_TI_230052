@@ -7,39 +7,76 @@ block contenido
     div(class="py-5")
         h1(class="text-center text-4xl font-extrabold") Ubicación en el Mapa
 
+        // Filtros de propiedades
         div(class="flex flex-col md:flex-row items-center py-10 gap-4")
             h2(class="text-sm uppercase text-gray font-bold") Filtrar Propiedades
                 
             div(class="w-full md:w-auto flex items-center gap-2")    
-                label(for="categorias" class="text-sm w-24 uppercase text-gray font-bold") Categorias 
+                label(for="categorias" class="text-sm w-24 uppercase text-gray font-bold") Categorías 
                 select(id="categorias" class="flex-1 bg-white w-full px-3 py-2 border border-gray rounded-md shadow") 
-                    option(value=""  ) - Seleccione - 
+                    option(value="" ) - Seleccione - 
                     each categoria in categorias 
-                        option(value=categoria.id )= categoria.nombre 
+                        option(value=categoria.id)= categoria.nombre 
 
             div(class="w-full md:w-auto flex items-center gap-2")    
                 label(for="precios" class="text-sm w-24 uppercase text-gray font-bold") Precios 
                 select(id="precios" class="flex-1 bg-white w-full px-3 py-2 border border-gray rounded-md shadow") 
-                    option(value=""  ) - Seleccione - 
+                    option(value="" ) - Seleccione - 
                     each precio in precios 
-                        option(value=precio.id )= precio.nombre 
+                        option(value=precio.id)= precio.nombre 
 
-        div(id="mapa-inicio" class="h-[600px] mt-5" )
+            // Filtro de operación (Venta o Renta)
+            div(class="w-full md:w-auto flex items-center gap-2")    
+                label(for="operacion" class="text-sm w-24 uppercase text-gray font-bold") Operación 
+                select(id="operacion" class="flex-1 bg-white w-full px-3 py-2 border border-gray rounded-md shadow") 
+                    option(value="") - Seleccione - 
+                    option(value="venta") Venta 
+                    option(value="renta") Renta
 
+        // Mapa de propiedades
+        div(id="mapa-inicio" class="h-[600px] mt-5")
+
+         // Sección de Casas en Venta
         section(class="py-5")
-            h2(class="text-center text-4xl font-extrabold pt-10") Casas en venta 
+            h2(class="text-center text-4xl font-extrabold pt-10") Casas en Venta
+            if casas.length
+                div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
+                    each propiedad in casas
+                        include ./templates/card
+            else
+                p(class="text-center text-gray text-lg py-5") No hay casas disponibles.
 
-            div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
-                each propiedad in casas
-                    include ./templates/card
-                    
+        // Sección de Departamentos en Venta
         section(class="py-5")
-            h2(class="text-center text-4xl font-extrabold pt-10") Departamentos en venta 
+            h2(class="text-center text-4xl font-extrabold pt-10") Departamentos en Venta
+            if departamentos.length
+                div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
+                    each propiedad in departamentos
+                        include ./templates/card
+            else
+                p(class="text-center text-gray text-lg py-5") No hay departamentos disponibles.
 
-            div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
-                each propiedad in departamentos
-                    include ./templates/card
+        // Sección de Establecimientos en Renta
+        section(class="py-5")
+            h2(class="text-center text-4xl font-extrabold pt-10") Establecimientos en Renta
+            if propiedadesRenta.length
+                div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
+                    each propiedad in propiedadesRenta
+                        include ./templates/card
+            else
+                p(class="text-center text-gray text-lg py-5") No hay establecimientos en renta disponibles.
+
+        // Sección de Establecimientos en Venta
+        section(class="py-5")
+            h2(class="text-center text-4xl font-extrabold pt-10") Establecimientos en Venta
+            if propiedadesVenta.length
+                div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
+                    each propiedad in propiedadesVenta
+                        include ./templates/card
+            else
+                p(class="text-center text-gray text-lg py-5") No hay establecimientos en venta disponibles.
+
 
 block scripts 
     script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
-    script(src="/js/mapaInicio.js") 
+    script(src="/js/mapaInicio.js")
