@@ -1,5 +1,8 @@
 import express from "express";
-import { formularioLogin, formularioRegistro, registrar, confirmar, formularioOlvidePassword, resetPassword, comprobarToken, nuevoPassword, autenticar, cerrarSesion } from "../controllers/usuarioController.js";
+import upload from '../middleware/upload.js';
+import { formularioLogin, formularioRegistro, registrar, confirmar, formularioOlvidePassword, resetPassword, comprobarToken, nuevoPassword, autenticar, cerrarSesion,mostrarUsuario,
+    subirFotoPerfil,
+    almacenarFotoPerfil } from "../controllers/usuarioController.js";
 
 const router = express.Router();
 //Routing
@@ -13,6 +16,10 @@ router.post('/cerrar-sesion', cerrarSesion)
 router.get('/registro', formularioRegistro);
 router.post('/registro', registrar);
 
+// Ruta para subir la foto de perfil
+router.get('/registro/:id', subirFotoPerfil);
+router.post('/registro/:id', upload.single('imagen'), almacenarFotoPerfil);
+
 router.get('/confirmar/:token', confirmar)
 
 router.get('/olvide-password', formularioOlvidePassword);
@@ -21,6 +28,9 @@ router.post('/olvide-password', resetPassword);
 //Almacena el nuevo password
 router.get('/olvide-password/:token', comprobarToken);
 router.post('/olvide-password/:token', nuevoPassword);
+
+// Ruta para mostrar el perfil del usuario 
+router.get('/:id', mostrarUsuario);
 
 
 
