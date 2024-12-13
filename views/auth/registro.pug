@@ -45,6 +45,9 @@ block contenido
                     div 
                         label.block.text-sm.uppercase.text-gray.mb-3.font-bold(for="email") Email de Registro
                         input#email.w-full.px-3.py-2.border.border-gray.rounded-md.placeholder-gray(placeholder="Escribe tu email" type="email" name="email" value= usuario ? usuario.email : '' ) 
+                    div
+                        label.block.text-sm.uppercase.text-gray.mb-2.font-bold Fecha de Nacimiento: 
+                        input#birthdate.w-full.px-3.py-2.border-2.border-gray.rounded-md.placeholder-gray(type="date" name="fecha_nacimiento" value=(usuario && usuario.fecha_nacimiento ? usuario.fecha_nacimiento : ""))    
                     div 
                         label.block.text-sm.uppercase.text-gray.mb-3.font-bold(for="password") Password
                         input#password.w-full.px-3.py-2.border.border-gray.rounded-md.placeholder-gray(placeholder="Escribe tu password" type="password" name="password" )        

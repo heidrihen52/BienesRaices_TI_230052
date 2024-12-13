@@ -22,10 +22,18 @@ Dropzone.options.imagen = {
             dropzone.processQueue()
         })
 
-        dropzone.on('queuecomplete', function(){
-            if(dropzone.getActiveFiles().length == 0){
-                window.location.href = '/mis-propiedades'
+        dropzone.on('queuecomplete', function() {
+            if (dropzone.getActiveFiles().length === 0) {
+                const context = dropzone.element.getAttribute('data-context');
+        
+                if (context === 'registro') {
+                    // Redirige a una vista específica para el registro
+                    window.location.href = '/auth/message';
+                } else if (context === 'propiedad') {
+                    // Redirige a la lista de propiedades
+                    window.location.href = '/mis-propiedades';
+                }
             }
-        })
+        }); 
     }
 }
