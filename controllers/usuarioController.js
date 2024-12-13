@@ -114,6 +114,12 @@ const registrar = async (req, res) => {
         })
         .run(req);
 
+    // Validación del alias
+    await check('alias')
+        .notEmpty().withMessage('El alias es un campo obligatorio')
+        .isLength({ min: 3 }).withMessage('El alias debe tener al menos 3 caracteres')
+        .run(req);
+
     let resultado = validationResult(req)
 
 
@@ -126,6 +132,7 @@ const registrar = async (req, res) => {
             usuario: {
                 nombre: req.body.nombre,
                 email: req.body.email,
+                alias: req.body.alias,
                 fecha_nacimiento: req.body.fecha_nacimiento
             }
         })
@@ -133,7 +140,7 @@ const registrar = async (req, res) => {
 
     //Extraer los datos
 
-    const { nombre, email, password, fecha_nacimiento } = req.body
+    const { nombre, email,foto = '', password, alias, fecha_nacimiento } = req.body
 
     //verificar que el usuario no este duplicado
     const existeUsuario = await Usuario.findOne({ where: { email } })
@@ -145,6 +152,7 @@ const registrar = async (req, res) => {
             usuario: {
                 nombre: req.body.nombre,
                 email: req.body.email,
+                alias: req.body.alias,
                 fecha_nacimiento: req.body.fecha_nacimiento
             }
         })
@@ -156,6 +164,8 @@ const registrar = async (req, res) => {
         email,
         fechaDeNacimiento: fecha_nacimiento,
         password,
+        foto,
+        alias,
         token: generateID()
     })
 
@@ -164,6 +174,12 @@ const registrar = async (req, res) => {
         nombre: usuario.nombre,
         email: usuario.email,
         token: usuario.token
+    })
+
+    res.render('auth/agregar-foto', {
+        pagina: `Agregar Imagen: ${usuario.nombre}`,
+        csrfToken: req.csrfToken(),
+        usuario
     })
 
 
@@ -431,7 +447,7 @@ const mostrarFormularioEditar = async (req, res) => {
 // Actualizar el perfil del usuario
 const actualizarPerfil = async (req, res) => {
     const { id } = req.params;
-    const { alias, fechaNacimiento } = req.body;
+    const { alias, nombre } = req.body;
     try {
         // Buscar al usuario por su ID
         const usuario = await Usuario.findByPk(id);
@@ -440,7 +456,7 @@ const actualizarPerfil = async (req, res) => {
         }
         // Actualizar los datos del usuario
         usuario.alias = alias || usuario.alias;
-        usuario.fechaNacimiento = fechaNacimiento || usuario.fechaNacimiento;
+        usuario.nombre = nombre || usuario.nombre;
         if (req.file) {
             usuario.foto = req.file.filename;
         }

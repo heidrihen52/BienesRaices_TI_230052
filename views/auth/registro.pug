@@ -42,6 +42,9 @@ block contenido
                     div 
                         label.block.text-sm.uppercase.text-gray.mb-3.font-bold(for="nombre") Tu Nombre
                         input#nombre.w-full.px-3.py-2.border.border-gray.rounded-md.placeholder-gray(placeholder="Escribe tu nombre" type="text" name="nombre" value= usuario ? usuario.nombre : '')
+                    div
+                        label.block.text-sm.uppercase.text-gray.mb-2.font-bold Alias: 
+                        input#alias.w-full.px-3.py-2.border-2.border-gray.rounded-md(type="text" placeholder="Ej. hadri5225" name="alias" value=(usuario && usuario.alias ? usuario.alias : ""))
                     div 
                         label.block.text-sm.uppercase.text-gray.mb-3.font-bold(for="email") Email de Registro
                         input#email.w-full.px-3.py-2.border.border-gray.rounded-md.placeholder-gray(placeholder="Escribe tu email" type="email" name="email" value= usuario ? usuario.email : '' ) 
