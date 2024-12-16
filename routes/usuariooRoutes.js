@@ -1,5 +1,5 @@
 import express from "express";
-import { mostrarUsuario, subirFotoPerfil, almacenarFotoPerfil,mostrarFormularioEditar,actualizarPerfil } from "../controllers/usuarioController.js";
+import { mostrarUsuario, subirFotoPerfil, almacenarFotoPerfil,mostrarMensajes,mostrarFormularioEditar,actualizarPerfil,responderMensaje } from "../controllers/usuarioController.js";
 import upload from '../middleware/upload.js';
 
 const router = express.Router();
@@ -12,4 +12,10 @@ router.get('/:id/editar', mostrarFormularioEditar);
 // En el archivo de rutas de usuario (usuarioRoutes.js o similar)
 router.post('/:id/editar', upload.single('foto'), actualizarPerfil);
 
+router.post('/responder-mensaje/:id', responderMensaje);
+// Mostrar los mensajes
+router.get('/mensajes', mostrarMensajes);
+
+// Responder un mensaje
+router.post('/responder-mensaje/:id', responderMensaje);
 export default router;

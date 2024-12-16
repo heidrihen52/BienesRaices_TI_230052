@@ -16,7 +16,8 @@ block contenido
                     else
                         img(src="/images/default-profile.png", alt="Foto de perfil por defecto", class="rounded-full w-32 h-32 mx-auto shadow-lg")
 
-                    form(method="POST" action="/usuario/subir-foto" enctype="multipart/form-data" class="mt-4")
+                    form(method="POST" action="/usuario/${usuario.id}/subir-foto" enctype="multipart/form-data" class="mt-4")
+                        input(type="hidden" name="_csrf" value=csrfToken)
                         label(for="foto", class="font-bold text-gray-700") Cambiar Foto de Perfil:
                         input(type="file" name="foto" id="foto" accept="image/*" class="block mt-2 w-full")
                         button(type="submit", class="bg-blue-600 text-white font-bold rounded-lg px-4 py-2 mt-3") Subir Foto
@@ -31,14 +32,15 @@ block contenido
                     p(class="text-gray-600 font-bold text-xs") Alias:
                         span(class="text-gray-800 block text-lg")= usuario.alias || "No especificado"
 
-                    form(method="POST" action="/usuario/editar-alias" class="mt-4 space-y-4")
+                    form(method="POST" action="/usuario/${usuario.id}/editar-alias" class="mt-4 space-y-4")
+                        input(type="hidden" name="_csrf" value=csrfToken)
                         label(for="alias", class="font-bold text-gray-700") Cambiar Alias:
                         input(type="text" name="alias" id="alias" value=usuario.alias placeholder="Ingresa tu alias" class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow")
                         button(type="submit", class="bg-green-600 text-white font-bold rounded-lg px-4 py-2") Guardar Alias
 
             aside(class="md:w-1/3 bg-white shadow rounded-lg p-5")
                 h1(class="text-center py-10 leading-6 text-2xl font-bold text-gray-900") Opciones
-                a(href="/usuario/editar" class="block text-center text-blue-600 font-bold mt-4") Editar Información
+                a(href="/usuario/${usuario.id}/editar" class="block text-center text-blue-600 font-bold mt-4") Editar Información
                 a(href="/logout" class="block text-center text-red-600 font-bold mt-4") Cerrar Sesión
 
 block scripts

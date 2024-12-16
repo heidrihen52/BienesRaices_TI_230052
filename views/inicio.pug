@@ -56,26 +56,6 @@ block contenido
             else
                 p(class="text-center text-gray text-lg py-5") No hay departamentos disponibles.
 
-        // Sección de Establecimientos en Renta
-        section(class="py-5")
-            h2(class="text-center text-4xl font-extrabold pt-10") Establecimientos en Renta
-            if propiedadesRenta.length
-                div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
-                    each propiedad in propiedadesRenta
-                        include ./templates/card
-            else
-                p(class="text-center text-gray text-lg py-5") No hay establecimientos en renta disponibles.
-
-        // Sección de Establecimientos en Venta
-        section(class="py-5")
-            h2(class="text-center text-4xl font-extrabold pt-10") Establecimientos en Venta
-            if propiedadesVenta.length
-                div(class="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-14")
-                    each propiedad in propiedadesVenta
-                        include ./templates/card
-            else
-                p(class="text-center text-gray text-lg py-5") No hay establecimientos en venta disponibles.
-
 
 block scripts 
     script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")

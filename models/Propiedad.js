@@ -52,8 +52,7 @@ const Propiedad = db.define('propiedades', {
     operacion: { 
         type: DataTypes.ENUM('venta', 'renta'),
         allowNull: false,
-    }
-
+    },
 
 });
 

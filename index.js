@@ -5,7 +5,9 @@ import usuarioRoutes from './routes/usuarioRoutes.js';
 import propiedadesRoutes from './routes/propiedadesRoutes.js';
 import appRoutes from './routes/appRoutes.js';
 import apiRoutes from './routes/apiRoutes.js';
+import usuariooRoutes from './routes/usuariooRoutes.js'
 import db from './config/db.js';
+import identificarUsuario from './middleware/identificarUsuario.js'
 import session from 'express-session';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt'; // Asegúrate de importar bcrypt
@@ -16,15 +18,14 @@ dotenv.config();
 // Crear la app
 const app = express();
 
-//habilitar lectura de datos de formularios
+// Habilitar lectura de datos de formularios
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.urlencoded({ extended: true }))
+// Habilitar cookie Parser
+app.use(cookieParser());
 
-//Habilitar cookie Parser
-app.use(cookieParser())
-
-//habilitar csurf
-app.use(csurf({ cookie: true }))
+// Habilitar csurf (protección contra CSRF)
+app.use(csurf({ cookie: true }));
 
 // Habilitar sesión
 app.use(session({
@@ -33,7 +34,8 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: process.env.NODE_ENV === 'production' } // Configuración para cookies seguras en producción
 }));
-//conexion a la bd
+
+// Conexión a la base de datos
 try {
     await db.authenticate();
     await db.sync(); // Asegúrate de que las tablas se sincronicen con la base de datos
@@ -41,21 +43,21 @@ try {
 } catch (error) {
     console.error('Error al conectar a la BD:', error);
 }
+app.use(identificarUsuario);
+// Habilitar pug como motor de plantillas
+app.set('view engine', 'pug');
+app.set('views', './views');
 
+// Carpeta pública (archivos estáticos como imágenes, CSS, JS)
+app.use(express.static('public'));
 
-//habilitar pug
-app.set('view engine', 'pug')
-app.set('views', './views')
+// Rutas
+app.use('/', appRoutes);
+app.use('/auth', usuarioRoutes);
+app.use('/', propiedadesRoutes);
+app.use('/api', apiRoutes);
+app.use('/usuario', usuariooRoutes); 
 
-//Carpeta publica
-app.use(express.static('public'))
-
-
-//routing
-app.use('/', appRoutes)
-app.use('/auth', usuarioRoutes)
-app.use('/', propiedadesRoutes)
-app.use('/api', apiRoutes)
 
 // Ruta para el login
 app.post('/login', async (req, res) => {
@@ -89,6 +91,14 @@ app.post('/login', async (req, res) => {
         res.status(500).send('Error en el servidor');
     }
 });
+
+// Arrancar el servidor
+const port = process.env.PORT || 3001;
+app.listen(port, () => {
+    console.log(`El servidor está funcionando en el puerto ${port}`);
+});
+
+
 app.get('/usuario', async (req, res) => {
     const usuarioId = req.session.usuarioId;
 
@@ -113,9 +123,4 @@ app.get('/usuario', async (req, res) => {
         console.error('Error al obtener datos del usuario:', err);
         res.status(500).send('Error al obtener datos');
     }
-});
-//definir un puerto y arrancar el proyecto
-const port = 3001;
-app.listen(port, () => {
-    console.log(`El servidor esta funcionando en el puerto ${port}`)
 });
