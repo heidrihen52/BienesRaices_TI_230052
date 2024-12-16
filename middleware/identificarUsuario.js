@@ -3,16 +3,15 @@ import Usuario from '../models/Usuario.js'
 
 const identificarUsuario = async (req, res, next) => {
 
-    //identificar si hay un token
+    // Identificar si hay un token
     const {_token} = req.cookies
     if (!_token) {
         console.log("No token found, setting req.usuario to null");
         req.usuario = null
-        return next()
+        return next();
     }
 
-    //comprobar el token
-
+    // Comprobar el token
     try {
         const decoded = Jwt.verify(_token, process.env.JWT_SECRET);
         console.log("Token decodificado:", decoded);
@@ -20,10 +19,11 @@ const identificarUsuario = async (req, res, next) => {
         const usuario = await Usuario.scope('eliminarPassword').findByPk(decoded.id);
         console.log("Usuario encontrado:", usuario);
 
-        //Almacenar el usuario al req
+        // Almacenar el usuario en req
         if (usuario) {
-            req.usuario = usuario
-        }else{
+            req.usuario = usuario;
+            res.locals.usuario = usuario;
+        } else {
             req.usuario = null;
         }
 
@@ -35,4 +35,4 @@ const identificarUsuario = async (req, res, next) => {
     }
 }
 
-export default identificarUsuario
+export default identificarUsuario;

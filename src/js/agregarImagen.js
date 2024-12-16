@@ -28,12 +28,12 @@ Dropzone.options.imagen = {
         
                 if (context === 'registro') {
                     // Redirige a una vista específica para el registro
-                    window.location.href = '/auth/message';
+                    window.location.href = 'login';
                 } else if (context === 'propiedad') {
                     // Redirige a la lista de propiedades
                     window.location.href = '/mis-propiedades';
                 }
             }
-        }); 
+        });   
     }
 }

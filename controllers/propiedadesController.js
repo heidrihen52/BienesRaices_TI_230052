@@ -31,6 +31,7 @@ const admin = async (req, res) => {
                     { model: Categoria, as: 'categoria' },
                     { model: Precio, as: 'precio' },
                     { model: Mensaje, as: 'mensajes' }
+                    
                 ],
             }),
             Propiedad.count({
@@ -74,16 +75,14 @@ const crear = async (req, res) => {
         datos: {}
     })
 }
-
 const guardar = async (req, res) => {
-    //Validacion
-    let resultado = validationResult(req)
+    let resultado = validationResult(req);
 
     if (!resultado.isEmpty()) {
         const [categorias, precios] = await Promise.all([
             Categoria.findAll(),
             Precio.findAll()
-        ])
+        ]);
 
         return res.render('propiedades/crear', {
             pagina: 'Crear Propiedad',
@@ -92,15 +91,12 @@ const guardar = async (req, res) => {
             precios,
             errores: resultado.array(),
             datos: req.body
-        })
-
-
+        });
     }
 
-    //Crear registro
-    const { titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioID, categoria: categoriaID, operacion } = req.body
+    const { titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioID, categoria: categoriaID, operacion } = req.body;
+    const { id: usuarioID } = req.usuario;
 
-    const { id: usuarioID } = req.usuario
     try {
         const propiedadGuardada = await Propiedad.create({
             titulo,
@@ -115,19 +111,16 @@ const guardar = async (req, res) => {
             categoriaID,
             operacion,
             usuarioID,
-            imagen: ''
-        })
+            imagen: '',
+            operacion
+        });
 
-        
-
-        res.redirect(`/propiedades/agregar-imagen/${propiedadGuardada.id}`)
-
+        res.redirect(`/propiedades/agregar-imagen/${propiedadGuardada.id}`);
     } catch (error) {
-        console.log(error)
-        res.redirect('/mis-propiedades')
+        console.log(error);
+        res.redirect('/mis-propiedades');
     }
-
-}
+};
 
 const agregarImagen = async (req, res) => {
 
@@ -230,15 +223,13 @@ const editar = async (req, res) => {
 }
 
 const guardarCambios = async (req, res) => {
-
-    //verificcar la Validacion
-    let resultado = validationResult(req)
+    let resultado = validationResult(req);
 
     if (!resultado.isEmpty()) {
         const [categorias, precios] = await Promise.all([
             Categoria.findAll(),
             Precio.findAll()
-        ])
+        ]);
 
         return res.render('propiedades/editar', {
             pagina: 'Editar Propiedad',
@@ -247,15 +238,13 @@ const guardarCambios = async (req, res) => {
             precios,
             errores: resultado.array(),
             datos: req.body
-        })
+        });
     }
 
-    
-
-    //validar que la propiedad exista
-    const { id } = req.params
+    const { id } = req.params;
     const { titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioID, categoria: categoriaID, operacion } = req.body;
-    const propiedad = await Propiedad.findByPk(id)
+
+    const propiedad = await Propiedad.findByPk(id);
 
     if (!propiedad || propiedad.usuarioID !== req.usuario.id) {
         return res.redirect('/mis-propiedades');
@@ -281,8 +270,7 @@ const guardarCambios = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-
-}
+};
 
 const eliminar = async (req, res) => {
     const { id } = req.params
@@ -336,32 +324,59 @@ const cambiarEstado = async (req, res) => {
 
 }
 
-
 const mostrarPropiedad = async (req, res) => {
+    const { id } = req.params;
 
-    const { id } = req.params
-
-    //Comprobar que la propieadad exista
-
+    // Comprobar que la propiedad exista e incluir los datos del vendedor
     const propiedad = await Propiedad.findByPk(id, {
         include: [
             { model: Precio, as: 'precio' },
-            { model: Categoria, as: 'categoria' }
+            { model: Categoria, as: 'categoria' },
+            { model: Usuario, as: 'usuario', attributes: ['alias', 'foto'] } 
         ]
-    })
+    });
+    
 
-    if (!propiedad  || !propiedad.publicado) {
-        return res.redirect('/404')
+    if (!propiedad || !propiedad.publicado) {
+        return res.redirect('/404');
     }
+
+    console.log('Datos del vendedor:', propiedad.usuario); // Para depuración
 
     res.render('propiedades/mostrar', {
         propiedad,
         pagina: propiedad.titulo,
         csrfToken: req.csrfToken(),
         usuario: req.usuario,
-        esVendedor: esVendedor(req.usuario?.id, propiedad.usuarioID)
-    })
-}
+        esVendedor: esVendedor(req.usuario?.id, propiedad.usuarioID),
+    });
+    
+
+};
+
+export default mostrarPropiedad;
+
+export const obtenerPropiedades = async (req, res) => {
+    try {
+        const propiedades = await Propiedad.findAll({
+            include: [
+                { model: Categoria, as: 'categoria' },
+                { model: Precio, as: 'precio' },
+                { model: Usuario, as: 'usuario', attributes: ['alias', 'foto'] }
+            ]
+        });
+
+        console.log('Propiedades:', JSON.stringify(propiedades, null, 2)); // Verificar datos del vendedor
+
+        res.render('propiedades/lista', {
+            propiedades,
+            pagina: 'Propiedades'
+        });
+    } catch (error) {
+        console.error(error);
+        res.redirect('/500');
+    }
+};
 
 const enviarMensaje = async (req, res) => {
 
@@ -372,7 +387,8 @@ const enviarMensaje = async (req, res) => {
     const propiedad = await Propiedad.findByPk(id, {
         include: [
             { model: Precio, as: 'precio' },
-            { model: Categoria, as: 'categoria' }
+            { model: Categoria, as: 'categoria' },
+            { model: Usuario, as: 'usuario', attributes: ['alias', 'foto'] }
         ]
     })
 
@@ -424,27 +440,57 @@ const verMensajes = async (req, res) => {
             {
                 model: Mensaje, as: 'mensajes',
                 include: [
-                    { model: Usuario.scope('eliminarPassword'), as: 'usuario' }
+                    { model: Usuario.scope('eliminarPassword'), as: 'usuario', attributes: ['nombre', 'email', 'alias', 'foto'] }
                 ]
             },
+            { model: Usuario, as: 'usuario', attributes: ['nombre', 'foto'] } // Incluye al propietario de la propiedad
         ],
-    })
-
+    });
+    
     if (!propiedad) {
-        return res.redirect('/mis-propiedades')
+        return res.redirect('/mis-propiedades');
     }
-
-    //Revisar quin visita la URL sea dueño de la propeidd
+    
+    // Asegúrate de que el usuario autenticado sea el propietario de la propiedad
     if (propiedad.usuarioID.toString() !== req.usuario.id.toString()) {
-        return res.redirect('/mis-propiedades')
+        return res.redirect('/mis-propiedades');
     }
-
+    
     res.render('propiedades/mensajes', {
         pagina: 'Mensajes',
         mensajes: propiedad.mensajes,
-        formatearFecha
-    })
+        propiedad, // Pasa la propiedad completa a la vista
+        formatearFecha,
+        csrfToken: req.csrfToken()
+    });
 }
+const responderMensaje = async (req, res) => {
+    const { id } = req.params;
+    const { respuesta } = req.body;
+
+    try {
+        // Validar que haya una respuesta
+        if (!respuesta || respuesta.trim() === '') {
+            return res.status(400).send('La respuesta no puede estar vacía.');
+        }
+
+        // Buscar el mensaje y actualizar su respuesta
+        const mensaje = await Mensaje.findByPk(id);
+        if (!mensaje) {
+            return res.status(404).send('Mensaje no encontrado.');
+        }
+
+        // Guardar la respuesta
+        mensaje.respuesta = respuesta;
+        await mensaje.save();
+
+        // Redirigir al usuario después de responder
+        res.redirect('/mis-propiedades');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar la respuesta.');
+    }
+};
 
 export {
     admin,
@@ -458,6 +504,7 @@ export {
     mostrarPropiedad,
     enviarMensaje,
     verMensajes,
-    cambiarEstado
+    cambiarEstado,
+    responderMensaje,
 }
 

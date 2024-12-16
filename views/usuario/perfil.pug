@@ -1,0 +1,28 @@
+extends ../layout/admin
+
+block contenido
+    div(class="py-5")
+        h1(id="titulo" class="text-4xl my-10 font-extrabold text-center") Perfil de Usuario
+
+        div(class="mt-5 md:flex md:gap-4 md:items-center justify-center")
+            div(class="md:w-2/3 bg-white shadow rounded-lg")
+                div(class="text-center p-5")
+                    if usuario.foto
+                        img(src=`/uploads/${usuario.foto}`, alt=`Foto de perfil de ${usuario.nombre}`, class="rounded-full w-32 h-32 mx-auto shadow-lg")
+                    else
+                        img(src="/images/default-profile.png", alt="Foto de perfil por defecto", class="rounded-full w-32 h-32 mx-auto shadow-lg")
+
+                div(class="px-5 py-10 space-y-5")
+                    h2(class="text-2xl leading-6 font-bold text-gray-900") Información Personal
+                    p(class="text-gray-600 font-bold text-xs") Nombre:
+                        span(class="text-gray-800 block text-lg")= usuario.nombre
+                    p(class="text-gray-600 font-bold text-xs") Correo:
+                        span(class="text-gray-800 block text-lg")= usuario.email
+                    p(class="text-gray-600 font-bold text-xs") Alias:
+                        span(class="text-gray-800 block text-lg")= usuario.alias || "No especificado"
+                    p(class="text-gray-600 font-bold text-xs") Fecha de nacimiento:
+                        span(class="text-gray-800 block text-lg")= usuario.fechaDeNacimiento || "No especificada"
+
+                    // Enlace para ir a la página de edición del perfil
+                    //a(href=`/usuario/${usuario.id}/editar`, class="bg-green hover:bg-orange text-white font-bold rounded-lg px-4 py-2 mt-3 inline-block") Editar Perfil
+
